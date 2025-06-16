@@ -2,6 +2,8 @@ package org.episs;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.*;
 
 public class frmPrincipal {
@@ -64,13 +66,17 @@ public class frmPrincipal {
             }
         });
 
-        btnIns.addActionListener(e -> {
-            JFrame objFC = new JFrame("Gestión de Clientes");
-            objFC.setContentPane(new frmInsCli().jpClientes);
-            objFC.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            objFC.pack();
-            objFC.setLocationRelativeTo(null);
-            objFC.setVisible(true);
+        btnIns.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame objFC = new JFrame("Gestión de Clientes");
+                frmInsCli objFic = new frmInsCli(() -> cargarDatos());
+                objFC.setContentPane(objFic.jpClientes);
+                objFC.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                objFC.pack();
+                objFC.setLocationRelativeTo(null);
+                objFC.setVisible(true);
+            }
         });
     }
 

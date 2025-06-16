@@ -1,6 +1,7 @@
 package org.episs;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -15,7 +16,10 @@ public class frmInsCli {
     private JButton btnConf;
     private JButton btnCancelar;
 
-    public frmInsCli() {
+    private intCliInsertadoCallback escuCallBack;
+
+    public frmInsCli(intCliInsertadoCallback objEscu) {
+        escuCallBack = objEscu;
         agregarEventos();
     }
 
@@ -29,18 +33,31 @@ public class frmInsCli {
                 if (!nombre.isEmpty() && !email.isEmpty()) {
                     if (insCliBD(nombre, email)) {
                         JOptionPane.showMessageDialog(jpClientes, "Cliente insertado con éxito", "MENSAJE", JOptionPane.INFORMATION_MESSAGE);
-                        limpiarCampos();
+
+                        // Notificar al callback que un cliente fue insertado
+                        if (escuCallBack != null) {
+                            escuCallBack.cliInsertado();
+                        }
+
+                        // Cerrar solo esta ventana
+                        Window ven = SwingUtilities.getWindowAncestor(jpClientes);
+                        if (ven != null) ven.dispose();
+
                     } else {
-                        JOptionPane.showMessageDialog(jpClientes, "Error al insertar datos en la BD", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(jpClientes, "Error al insertar datos en la BD", "ADVERTENCIA", JOptionPane.WARNING_MESSAGE);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(jpClientes, "Error: datos incompletos", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(jpClientes, "Error al insertar datos, revisar", "ADVERTENCIA", JOptionPane.WARNING_MESSAGE);
                 }
             }
         });
 
         btnLimpiar.addActionListener(e -> limpiarCampos());
-        btnCancelar.addActionListener(e -> ((JFrame) SwingUtilities.getWindowAncestor(jpClientes)).dispose());
+
+        btnCancelar.addActionListener(e -> {
+            Window ven = SwingUtilities.getWindowAncestor(jpClientes);
+            if (ven != null) ven.dispose();
+        });
     }
 
     private boolean insCliBD(String nom, String email) {
