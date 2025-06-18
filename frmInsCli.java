@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -21,6 +22,8 @@ public class frmInsCli {
     public frmInsCli(intCliInsertadoCallback objEscu) {
         escuCallBack = objEscu;
         agregarEventos();
+        jpClientes.addComponentListener(new ComponentAdapter() {
+        });
     }
 
     private void agregarEventos() {
